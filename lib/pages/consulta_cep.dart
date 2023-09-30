@@ -1,3 +1,4 @@
+import 'package:app_teste_web_api/components/botao.dart';
 import 'package:app_teste_web_api/components/campo_texto.dart';
 import 'package:app_teste_web_api/models/cep_model.dart';
 import 'package:app_teste_web_api/services/busca_cep_service.dart';
@@ -46,6 +47,7 @@ class _ConsultaCepState extends State<ConsultaCep> {
               Padding(
                 padding: const EdgeInsets.only(bottom: 16),
                 child: Form(
+                  key: formKey,
                   child: Column(
                     children: [
                       CampoTexto(
@@ -58,8 +60,15 @@ class _ConsultaCepState extends State<ConsultaCep> {
                   ),
                 ),
               ),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 16),
+                child: Botao(
+                  onPressed: onSubmitForm,
+                  label: "Buscar",
+                ),
+              ),
               StreamBuilder<CepModel>(
-                stream: Stream.fromFuture(buscaCep(cepTeste)),
+                stream: Stream.fromFuture(buscaCep(cep)),
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
                     var dados = snapshot.data!;
