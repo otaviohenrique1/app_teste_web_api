@@ -7,8 +7,10 @@ Future<CepModel> buscaCep(String cep) async {
       await http.get(Uri.parse("https://viacep.com.br/ws/$cep/json/"));
   if (response.statusCode == 200) {
     return CepModel.fromJson(jsonDecode(response.body));
+  } else if (response.statusCode == 404) {
+    throw Exception('Pagina nao existe');
   } else {
-    throw Exception('Failed to load');
+    throw Exception('Erro');
   }
 }
 // viacep.com.br/ws/01001000/json/

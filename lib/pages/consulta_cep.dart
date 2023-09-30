@@ -1,5 +1,7 @@
+import 'package:app_teste_web_api/components/campo_texto.dart';
 import 'package:app_teste_web_api/models/cep_model.dart';
 import 'package:app_teste_web_api/services/busca_cep_service.dart';
+import 'package:app_teste_web_api/utils/validator.dart';
 import 'package:flutter/material.dart';
 
 class ConsultaCep extends StatefulWidget {
@@ -10,9 +12,27 @@ class ConsultaCep extends StatefulWidget {
 }
 
 class _ConsultaCepState extends State<ConsultaCep> {
+  GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  final TextEditingController _campoCepController = TextEditingController();
+  String cep = "";
+
+  @override
+  void dispose() {
+    _campoCepController.dispose();
+    super.dispose();
+  }
+
+  void onSubmitForm() {
+    if (formKey.currentState!.validate()) {
+      setState(() {
+        cep = _campoCepController.text;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    String cep = "12630001";
+    String cepTeste = "12630001";
     return Scaffold(
       appBar: AppBar(
         title: const Text("Consulta CEP"),
@@ -23,15 +43,30 @@ class _ConsultaCepState extends State<ConsultaCep> {
           padding: const EdgeInsets.all(16),
           child: Column(
             children: [
+              Padding(
+                padding: const EdgeInsets.only(bottom: 16),
+                child: Form(
+                  child: Column(
+                    children: [
+                      CampoTexto(
+                        hintText: "Valor de A",
+                        controller: _campoCepController,
+                        keyboardType: TextInputType.number,
+                        validator: validaCampoVazio,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
               StreamBuilder<CepModel>(
-                stream: Stream.fromFuture(buscaCep(cep)),
+                stream: Stream.fromFuture(buscaCep(cepTeste)),
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
                     var dados = snapshot.data!;
                     if (dados.cep == "") {
                       return Column(
                         children: [
-                          Text("cep: $cep"),
+                          Text("cep: $cepTeste"),
                           const Text("Cep nao existe"),
                         ],
                       );
