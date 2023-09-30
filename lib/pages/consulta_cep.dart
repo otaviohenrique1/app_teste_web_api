@@ -34,6 +34,10 @@ class _ConsultaCepState extends State<ConsultaCep> {
   @override
   Widget build(BuildContext context) {
     String cepTeste = "12630001";
+    /*
+      01001000
+      12630000
+    */
     return Scaffold(
       appBar: AppBar(
         title: const Text("Consulta CEP"),
@@ -55,7 +59,14 @@ class _ConsultaCepState extends State<ConsultaCep> {
                           hintText: "Valor de A",
                           controller: _campoCepController,
                           keyboardType: TextInputType.number,
-                          validator: validaCampoVazio,
+                          validator: (String? value) {
+                            if ((value == null || value.isEmpty)) {
+                              return "Campo vazio";
+                            } else if (value.length > 8 || value.length < 8) {
+                              return "Valor invalido";
+                            }
+                            return null;
+                          },
                         ),
                       ],
                     ),
