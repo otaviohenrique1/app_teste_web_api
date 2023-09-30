@@ -39,68 +39,70 @@ class _ConsultaCepState extends State<ConsultaCep> {
         title: const Text("Consulta CEP"),
         backgroundColor: Colors.orange,
       ),
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(bottom: 16),
-                child: Form(
-                  key: formKey,
-                  child: Column(
-                    children: [
-                      CampoTexto(
-                        hintText: "Valor de A",
-                        controller: _campoCepController,
-                        keyboardType: TextInputType.number,
-                        validator: validaCampoVazio,
-                      ),
-                    ],
+      body: SingleChildScrollView(
+        child: Center(
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 16),
+                  child: Form(
+                    key: formKey,
+                    child: Column(
+                      children: [
+                        CampoTexto(
+                          hintText: "Valor de A",
+                          controller: _campoCepController,
+                          keyboardType: TextInputType.number,
+                          validator: validaCampoVazio,
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(bottom: 16),
-                child: Botao(
-                  onPressed: onSubmitForm,
-                  label: "Buscar",
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 16),
+                  child: Botao(
+                    onPressed: onSubmitForm,
+                    label: "Buscar",
+                  ),
                 ),
-              ),
-              StreamBuilder<CepModel>(
-                stream: Stream.fromFuture(buscaCep(cep)),
-                builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    var dados = snapshot.data!;
-                    if (dados.cep == "") {
+                StreamBuilder<CepModel>(
+                  stream: Stream.fromFuture(buscaCep(cep)),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      var dados = snapshot.data!;
+                      if (dados.cep == "") {
+                        return Column(
+                          children: [
+                            Text("cep: $cepTeste"),
+                            const Text("Cep nao existe"),
+                          ],
+                        );
+                      }
                       return Column(
                         children: [
-                          Text("cep: $cepTeste"),
-                          const Text("Cep nao existe"),
+                          Text("cep: ${dados.cep}"),
+                          Text("logradouro: ${dados.logradouro}"),
+                          Text("complemento: ${dados.complemento}"),
+                          Text("bairro: ${dados.bairro}"),
+                          Text("localidade: ${dados.localidade}"),
+                          Text("uf: ${dados.uf}"),
+                          Text("ibge: ${dados.ibge}"),
+                          Text("gia: ${dados.gia}"),
+                          Text("ddd: ${dados.ddd}"),
+                          Text("siafi: ${dados.siafi}"),
                         ],
                       );
+                    } else if (snapshot.hasError) {
+                      return Text('${snapshot.error}');
                     }
-                    return Column(
-                      children: [
-                        Text("cep: ${dados.cep}"),
-                        Text("logradouro: ${dados.logradouro}"),
-                        Text("complemento: ${dados.complemento}"),
-                        Text("bairro: ${dados.bairro}"),
-                        Text("localidade: ${dados.localidade}"),
-                        Text("uf: ${dados.uf}"),
-                        Text("ibge: ${dados.ibge}"),
-                        Text("gia: ${dados.gia}"),
-                        Text("ddd: ${dados.ddd}"),
-                        Text("siafi: ${dados.siafi}"),
-                      ],
-                    );
-                  } else if (snapshot.hasError) {
-                    return Text('${snapshot.error}');
-                  }
-                  return const CircularProgressIndicator();
-                },
-              ),
-            ],
+                    return const CircularProgressIndicator();
+                  },
+                ),
+              ],
+            ),
           ),
         ),
       ),
