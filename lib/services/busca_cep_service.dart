@@ -12,13 +12,3 @@ Future<CepModel> buscaCep(String cep) async {
   }
 }
 // viacep.com.br/ws/01001000/json/
-
-Stream<CepModel> buscaCep2(String cep) async* {
-  final response =
-      await http.get(Uri.parse("https://viacep.com.br/ws/$cep/json/"));
-  if (response.statusCode == 200) {
-    yield CepModel.fromJson(jsonDecode(response.body));
-  } else {
-    throw Exception('Failed to load');
-  }
-}
